@@ -21,9 +21,17 @@
   display: block;
 }
 #form2{
-  display: none;
+  /* display: none; */
 }
 #form2 div{
   margin-top: 5px;
-  border-top:1px solid red ;
+}
+.stairs{
+  display: none;
+}
+.bench{
+  display: none;
+}
+.ladderBeam{
+  display: none;
 }

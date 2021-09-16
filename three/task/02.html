@@ -32,8 +32,8 @@
             </form>
             <form action="" id=form2>
                 <div class="stairs">
-                    楼梯总高度：<input type="text" class="stairs" value="2900">
-                    台阶数：<input type="text" class="stairs" value="17">
+                    楼梯总高度：<input type="text"  value="2900">
+                    台阶数：<input type="text" value="17">
                 </div>
                 <div class="bench">
                     板厚：<input type="text" class="bench" value="180">
@@ -100,7 +100,15 @@
                 box[0].style.visibility='visible'
                 let name=intersects[0].object.name
                 if(name=='mesh1'){
-                  console.log('d')
+                  $('.stairs')[0].style.display='block'
+                  console.log($('.stairs')[0].style.display)
+                }else if(name=='mesh2'){
+                    console.log('2')
+                }else if(name=='mesh3'){
+                    console.log('3')
+                }else{
+                    console.log('4')
+
                 }
             }
         })
@@ -116,9 +124,9 @@
             if(!flag){
                 initPingfeng()
             }
-            initValue()
-            $('#form2').style.display='block'
-            editStairs(stairs,bench)
+            // initValue()
+            // $('#form2').style.display='block'
+            // editStairs(stairs,bench)
         })
         
         function render() {
@@ -141,6 +149,7 @@
                 color:0x00ff00,
             })
             mesh2=new THREE.Mesh(geometry2,material2)
+            mesh2.name='mesh2'
             scene.add(mesh1,mesh2)
 
             let stairsVertices2=stairs2.createStairsVertices()
@@ -150,6 +159,7 @@
             mesh3.rotateY(Math.PI)
             let geometry4=geometry2.clone()
             mesh4=new THREE.Mesh(geometry4,material2)
+            mesh4.name='mesh4'
             mesh4.rotateY(Math.PI)
             let group=new THREE.Group()
             group.add(mesh3,mesh4)
@@ -157,9 +167,7 @@
             group.translateX(12*260)
             scene.add(group)
         }
-        function afterBreak(){
-            initPingfeng()
-        }
+        
         function initPingfeng(){
             let pingfeng=$('.pingfeng')
             for(let i=0;i<pingfeng.length;i++){
@@ -222,10 +230,10 @@
             }
             return dom
         }
-        function initStairsValue(stairs){
-          stairs.totalHeight=Number($('.stairs')[1].value)
-          stairs.num=Number($('.stairs')[2].value)
-          console.log(stairs)
+        function getValue(obj,dom){
+          for(let i=0;i<dom.childNodes.length;i++){
+              dom.childNodes[i].value=obj[i]
+          }
         }
         function initValue(){
             bench.h=Number($('.bench')[1].value)
