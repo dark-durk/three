@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            overflow: hidden;
+            margin: 0;
+        }
+    </style>
+    <script src="../js/three.min.js"></script>
+    <script src="../js/OrbitControls.js"></script>
+</head>
+<body>
+    <script>
+    let scene, camera, renderer
+    let INTERSECTED
+    let width = window.innerWidth
+    let height = window.innerHeight
+    const mouse = new THREE.Vector2()
+    let flag = false
+    let raycaster = new THREE.Raycaster();
+    const STAIRS={
+        width:10,
+        height:10,
+        length:50
+    }
+
+
+    scene = new THREE.Scene()
+    // 第一组楼梯
+    let group = new THREE.Group()
+    let num=18
+    let stairs=createStairs(num)
+    group.add(stairs)
+    let mesh1=createMesh(-(num+0.5)*STAIRS.width, (num)*STAIRS.width,0,10,20,100,0xFFFF00)
+    let mesh2=createMesh(-(num+3.5)*STAIRS.width, (num+0.75)*STAIRS.width,0,50,5,100,0x008080)
+    group.add(mesh1,mesh2)
+    scene.add(group)
+    group.position.set(50,-50,0)
+
+    let t1=new THREE.SphereGeometry(100,100,100)
+    let arr1=(t1.attributes.position.array)
+    let p1=new THREE.BufferAttribute(arr1,3)
+    console.log(p1)
+    
+   
+// 灯光
+    ambientLight = new THREE.AmbientLight("#ffffff", 0.3);
+    scene.add(ambientLight);
+    let directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+    directionalLight.position.set(0, 80, 20)
+    directionalLight.target = group
+    scene.add(directionalLight)
+
+// 第二组楼梯
+    let group2=new THREE.Group()
+    let stairs2=createStairs(num)
+    group2.add(stairs2)
+    let mesh3=createMesh(-(num+0.5)*STAIRS.width, (num)*STAIRS.width,0,10,20,100,0xFFFF00)
+    let mesh4=createMesh(-(num+3.5)*STAIRS.width, (num+0.75)*STAIRS.width,0,50,5,100,0x008080)
+    group2.position.set(50,-50,0)
+    group2.rotateY(Math.PI)
+    group2.translateX(12*STAIRS.width)
+    group2.translateZ(10)
+    group2.add(mesh3,mesh4)
+    scene.add(group2)
+    // 横杆
+    let mesh5=createMesh(-10, (num)*STAIRS.width-45,0,num*STAIRS.width+60,10,10,0x0000ff)
+    scene.add(mesh5)
+    // 渲染对象
+    renderer = new THREE.WebGLRenderer()
+    renderer.setPixelRatio(window.devicePixelRatio);//设置canvas的像素比为当前设备的屏幕像素比，避免高分屏下模糊
+    renderer.setSize(width, height)
+    document.body.appendChild(renderer.domElement)
+    // 初始化相机对象
+    initCamera(width, height)
+    // renderer.render(scene, camera)
+
+    document.addEventListener('mousemove', onMouse);
+    //   window.addEventListener('mousedown', function (e) {
+    //     flag = true
+    //     console.log(flag)
+    //   })
+    //   window.addEventListener('mouseup', function () {
+    //     flag = false
+    //   })
+    animate()
+    function animate() {
+      requestAnimationFrame(animate)
+      render()
+    }
+    // 将屏幕上的鼠标二维坐标转为标准坐标
+    function onMouse(event) {
+      event.preventDefault();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    }
+    function render() {
+      // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+      raycaster.setFromCamera(mouse, camera);
+      // 获取raycaster直线和所有模型相交的数组集合
+      let intersects = raycaster.intersectObjects(scene.children, true);
+    //   console.log(intersects)
+      if (intersects.length > 0) {
+        if (INTERSECTED !== intersects[0].object) {
+          if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+          INTERSECTED = intersects[0].object;
+          INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+          INTERSECTED.material.emissive.setHex(0x333333);
+        }
+      } else {
+        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+        // INTERSECTED.scale.set(1, 1, 1)
+        INTERSECTED = null;
+
+      }
+      renderer.clear()
+      renderer.render(scene, camera)
+    }
+    
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+    // 创建楼梯模型对象
+    function createStairs(num) {
+        let points=[]
+        points.push(new THREE.Vector2(-STAIRS.width,0))
+        for(let i=0;i<num;i++){
+            points.push(new THREE.Vector2(-STAIRS.width*i,STAIRS.height*i))
+            points.push(new THREE.Vector2(-STAIRS.width*i,STAIRS.height*(i+1)))
+        }
+        points.push(new THREE.Vector2(-STAIRS.width*(num),STAIRS.height*(num)))
+        points.push(new THREE.Vector2(-STAIRS.width*(num),STAIRS.height*(num-1)))
+      let shape = new THREE.Shape(points)
+      let geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: STAIRS.length,
+        bevelEnabled: false
+      })
+      let material = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+      });//材质对象
+      let mesh = new THREE.Mesh(geometry, material);
+      return mesh
+    }
+    // 创建一个立方体模型对象
+    function createMesh(x, y, z, l = 50, w = 10, h = 10, color = 0xFF0000) {
+      let geometry = new THREE.BoxGeometry(l, w, h)
+      let material = new THREE.MeshLambertMaterial({
+        color: color
+      })
+    //   console.log(geometry.faces)
+    //   console.log(geometry.vertices)
+
+      let mesh = new THREE.Mesh(geometry, material)
+      mesh.translateX(x)
+      mesh.translateY(y)
+      mesh.translateZ(z)
+      return mesh
+    }
+    function initCamera(width, height) {
+      let k = width / height
+      let s = 200
+      camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+      camera.position.set(100, 200, 100); //设置相机位置
+      camera.lookAt(scene.position); //设置相机方向(指向的场景对象)
+    }
+    </script>
+    
+</body>
+</html>

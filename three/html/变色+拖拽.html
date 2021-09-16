@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../js/three.min.js"></script>
+  <script src="../js/OrbitControls.js"></script>
+
+</head>
+<!-- 为每个顶点创建颜色，修改顶点颜色值 -->
+<body>
+  <script>
+    let scene, camera, renderer
+    let intersected,intersectedHover //intersected表示拖拽时的物体，intersectedHover表示鼠标hover时的对象
+    let mouse = new THREE.Vector2() //归一坐标
+    let raycaster = new THREE.Raycaster()
+
+    scene = new THREE.Scene()
+    let geometry = new THREE.BoxGeometry(100, 100, 100).toNonIndexed()
+
+    // 创建颜色数组,给每个顶点一个颜色
+    let colors = [],colorsTemp
+    const NORMAL_COLOR = 0x0000ff
+    const HOVER_COLOR = 0x011100
+    let color = new THREE.Color(NORMAL_COLOR)
+    for (let i = 0; i < geometry.attributes.position.count; i++) {
+      colors.push(color.r)
+      colors.push(color.g)
+      colors.push(color.b)
+    }
+    geometry.attributes.color = new THREE.Float32BufferAttribute(colors, 3)
+
+    // 创建mesh对象并加入到场景中
+    let material = new THREE.MeshLambertMaterial({
+      vertexColors: THREE.VertexColors,
+    })
+    let mesh = new THREE.Mesh(geometry, material)
+    scene.add(mesh)
+
+    // 设置灯光
+    let ambientLight = new THREE.AmbientLight(0xffffff, 1)
+    scene.add(ambientLight)
+    let pointLight = new THREE.PointLight(0xffffff, 1)
+    pointLight.position.set(400, 200, 300)
+    scene.add(pointLight)
+
+    // 创建相机对象,设置相机属性
+    let s = 200
+    let k = window.innerWidth / window.innerWidth
+    camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000)
+    camera.position.set(100, 80, 800)
+    camera.lookAt(scene.position)
+
+    // 创建渲染对象
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+    render()
+
+    // 鼠标第一次mousedown时的世界坐标位置
+    let startPosition=new THREE.Vector3()
+  
+    document.onmousedown=function(e){
+        getMouse(e)
+        raycaster.setFromCamera(mouse,camera)
+        let intersects=raycaster.intersectObjects(scene.children,true)
+        if(intersects.length>0){
+          // 关闭orbitControl的平移和旋转事件
+          controls.enablePan = false  
+          controls.enableRotate = false
+          intersected=intersects[0].object
+          // 将鼠标mousedown时在屏幕上的二维坐标转为三维的世界坐标，并保存在startPosition
+          let stdVector=new THREE.Vector3(mouse.x,mouse.y,0.5)
+          startPosition=stdVector.unproject(camera)
+        }
+      }
+
+    document.onmousemove = function (e) {
+      getMouse(e)
+      raycaster.setFromCamera(mouse, camera)
+      let intersects = raycaster.intersectObjects(scene.children)
+      if (intersects.length > 0) {
+        // 恢复前一个面的颜色
+        if(intersectedHover){
+          intersectedHover.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        }
+        intersectedHover = intersects[0].object
+        let face = intersects[0].face
+        color.set(HOVER_COLOR)
+        // 鼠标hover时的物体的法向量数组
+        let normal=intersectedHover.geometry.attributes.normal.array
+        let r=getSamePointIndex(normal,face.normal.x,face.normal.y,face.normal.z)
+
+        // 创建一个hover时的颜色数组,并改变hover时的物体的颜色数组
+        colorsTemp=colors.concat()
+        for (let i in r) {
+          colorsTemp[r[i].x ] = color.r
+          colorsTemp[r[i].y] = color.g
+          colorsTemp[r[i].z] = color.b
+        }
+        intersectedHover.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsTemp, 3));
+        if(intersected){
+          // 获取鼠标的偏移量
+          let stdVector=new THREE.Vector3(mouse.x,mouse.y,0.5)
+          let worldVector=stdVector.unproject(camera)
+          let offset=worldVector.clone().sub(startPosition)
+          startPosition.copy(worldVector)
+
+          // 修改mousedown时的物体的位置
+          intersected.position.x=intersected.position.x+offset.x
+          intersected.position.y=intersected.position.y+offset.y
+          intersected.position.z=intersected.position.z+offset.z
+        }
+      }else{
+        // 鼠标没有放到物体上,将颜色恢复原来的值
+        if(intersectedHover){
+          intersectedHover.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        }
+        intersectedHover=null
+      }
+    }
+    // 当鼠标mouseup时,恢复控件事件,将intersected置空
+    document.onmouseup=function(){
+        controls.enablePan = true
+        controls.enableRotate = true
+        intersected=null
+        startPosition=null
+    }
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+    function render() {
+      renderer.render(scene, camera)
+      requestAnimationFrame(render)
+    }
+    // 将屏幕上的坐标归一化
+    function getMouse(e) {
+      e.preventDefault()
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1
+    }
+    /*
+      输入：arr:顶点数组，x y z ：坐标值
+      输出：在arr中x y z相同的点的下标
+    */
+    function getSamePointIndex(arr, x, y, z) {
+      let res = []
+      for (let i = 0; i < arr.length - 2; i += 3) {
+        if (arr[i] == x && arr[i + 1] == y && arr[i + 2] == z) {
+          let indexObj = {}
+          indexObj.x = i
+          indexObj.y = i + 1
+          indexObj.z = i + 2
+          res.push(indexObj)
+        }
+      }
+      return res
+    }
+  </script>
+</body>
+
+</html>

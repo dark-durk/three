@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            overflow: hidden;
+            margin: 0;
+        }
+    </style>
+    <script src="../js/three.min.js"></script>
+    <script src="../js/OrbitControls.js"></script>
+</head>
+<body>
+    <script>
+        let scene,camera,renderer
+        scene = new THREE.Scene()
+        // 创建楼梯
+        let group = new THREE.Group()
+        for (let i = 0; i < 17; i++) {
+            let x = -i * 5
+            let y = i * 5
+            let mesh = createStairs(x, y)
+            group.add(mesh)
+        }
+        
+        let mesh1=createMesh(-82.5,80,0,5,10,60,0xFFFF00,false)
+        let mesh2=createMesh(-105, 82.5,0,40,5,60,0x008080,false)
+        group.add(mesh1,mesh2)
+        scene.add(group)
+        
+        let group2 = new THREE.Group()
+        for (let i = 0; i < 17; i++) {
+            let x = -i * 5
+            let y = i * 5
+            let mesh = createStairs(x, y)
+            group2.add(mesh)
+        }
+        let mesh3=createMesh(-82.5,80,0,5,10,60,0xFFFF00)
+        let mesh4=createMesh(-105, 82.5,0,40,5,60,0x008080)
+        group2.add(mesh3,mesh4)
+        group2.rotateY(Math.PI)
+        group2.translateX(80)
+        scene.attach(group2)
+        
+        ambientLight = new THREE.AmbientLight("#ffffff", 0.3);
+        scene.add(ambientLight);
+        let directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+        directionalLight.position.set(0, 80, 20)
+        directionalLight.target = group
+        scene.add(directionalLight)
+        
+        let axes=new THREE.AxesHelper(800)
+        scene.add(axes)
+        
+        initCamera()
+        renderer=new THREE.WebGLRenderer()
+        renderer.setPixelRatio(window.devicePixelRatio);//设置canvas的像素比为当前设备的屏幕像素比，避免高分屏下模糊
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        document.body.appendChild(renderer.domElement)
+        render()
+        let controls = new THREE.OrbitControls(camera, renderer.domElement)
+        controls.addEventListener('change',render)
+
+        function render(){
+            renderer.render(scene,camera)
+        }
+        function initCamera() {
+            let s=200
+            let k=window.innerWidth/window.innerWidth
+            camera=new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000)
+            camera.position.set(100,300,300)
+            camera.lookAt(scene.position)
+        }
+        function getMouse(e){
+            e.preventDefault()
+            mouse.x=(e.clientX/window.innerWidth)*2-1
+            mouse.y=-(e.clientY/window.innerHeight)*2+1
+        }
+
+    function createStairs(x, y) {
+      let shape = new THREE.Shape()
+      shape.moveTo(0, 0)
+      shape.lineTo(5, 0)
+      shape.lineTo(5, -10)
+      shape.lineTo(0, -5)
+      shape.lineTo(0, 0)
+      let geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: 30,
+        bevelEnabled: false
+      })
+      let material = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+      });//材质对象
+      let mesh = new THREE.Mesh(geometry, material);
+      mesh.translateX(x)
+      mesh.translateY(y)
+      return mesh
+    }
+    function createMesh(x, y, z, l = 50, w = 10, h = 10, color = 0xFF0000,t=true) {
+      let geometry = new THREE.BoxGeometry(l, w, h)
+      let material = new THREE.MeshLambertMaterial({
+        color: color
+      })
+      if(!t){
+          // 创建顶点颜色数组
+        let colors = []
+        let colorObj = new THREE.Color(color)
+        for (let i = 0; i < geometry.attributes.position.count; i++) {
+            colors.push(colorObj.r)
+            colors.push(colorObj.g)
+            colors.push(colorObj.b)
+        }
+        geometry.attributes.color = new THREE.Float32BufferAttribute(colors, 3)
+        material = new THREE.MeshLambertMaterial({
+            vertexColors: THREE.VertexColors,
+        })
+        geometry.userData.color=color
+      }
+      let mesh = new THREE.Mesh(geometry, material)
+      mesh.translateX(x)
+      mesh.translateY(y)
+      mesh.translateZ(z)
+      return mesh
+    }
+    
+    </script>
+    
+</body>
+</html>
