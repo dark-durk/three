@@ -1,246 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../css/common.css">
-    <link rel="stylesheet" href="../css/stairs.css">
-    <script src="../js/three.min.js"></script>
-    <script src="../js/OrbitControls.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/stairs.css">
+  <script src="../js/three.min.js"></script>
+  <script src="../js/OrbitControls.js"></script>
 </head>
+
 <body>
-    <div class="box">
-        <h2 class="header">
-            <span>楼梯拆分参数设置</span>
-        </h2>
-        <div class="form">
-            <form action="" id="form1">
-                <label for="first">拼缝1</label>
-                <input type="text" id="first" class="pingfeng" value="20">
-                <label for="second">拼缝2</label>
-                <input type="text" id="second" class="pingfeng" value="20">
-                <label for="third">拼缝3</label>
-                <input type="text" id="third" class="pingfeng" value="20">
-                <label for="forth">拼缝4</label>
-                <input type="text" id="forth" class="pingfeng" value="20">
-                <label for="fifth">拼缝5</label>
-                <input type="text" id="fifth" class="pingfeng" value="30">
-                <label for="six">拼缝6</label>
-                <input type="text" id="six" class="pingfeng" value="20">
-            </form>
-            <form action="" id=form2>
-                <div class="stairs">
-                    楼梯总高度：<input type="text" class="stairs" value="2900">
-                    台阶数：<input type="text" class="stairs" value="17">
-                </div>
-                <div class="bench">
-                    板厚：<input type="text" class="bench" value="180">
-                    上水平梯段厚度：<input type="text" class="bench" value="180">
-                    下水平梯段厚度：<input type="text" class="bench" value="180">
-                    上水平梯段宽度：<input type="text" class="bench" value="500">
-                    下水平梯段宽度：<input type="text" class="bench" value="500">
-                </div>
-                <div class="ladderBeam">
-                    梁宽：<input type="text" class="ladderBeam" value="200">
-                    梁高：<input type="text" class="ladderBeam" value="400">
-                    挑耳宽：<input type="text" class="ladderBeam" value="200">
-                    挑耳高：<input type="text" class="ladderBeam" value="200">
-                    下沉高度：<input type="text" class="ladderBeam" value="200">
-                </div>
-            </form>
+  <div class="box">
+    <h2 class="header">
+      <span>楼梯拆分参数设置</span>
+    </h2>
+    <div class="form">
+      <form action="" id="form1">
+        <label for="first">拼缝1</label>
+        <input type="text" id="first" class="pingfeng" value="20">
+        <label for="second">拼缝2</label>
+        <input type="text" id="second" class="pingfeng" value="20">
+        <label for="third">拼缝3</label>
+        <input type="text" id="third" class="pingfeng" value="20">
+        <label for="forth">拼缝4</label>
+        <input type="text" id="forth" class="pingfeng" value="20">
+        <label for="fifth">拼缝5</label>
+        <input type="text" id="fifth" class="pingfeng" value="30">
+        <label for="six">拼缝6</label>
+        <input type="text" id="six" class="pingfeng" value="20">
+      </form>
+      <form action="" id=form2>
+        <div class="stairsBench">
+          <div class="">
+            <p>
+              踏步宽度(x)：<input class="stairs" type="text" value="260" disabled>
+            </p>
+            <p>
+              踏步高度：<input class="stairs" type="text" value="161" disabled>
+            </p>
+            <p>
+              踏步长度(z)：<input class="stairs" type="text" value="1400">
+            </p>
+            <p>
+              台阶数：<input class="stairs" type="text" value="17">
+            </p>
+            <p>
+              楼梯总高度：<input class="stairs" type="text" value="2900">
+            </p>
+            <p>
+              楼梯总宽度：<input class="stairs" type="text" value="4420">
+            </p>
+          </div>
+          <div class="">
+            <p>
+              板厚：<input class="bench" type="text" value="180">
+            </p>
+            <p>
+              上水平梯段厚度：<input class="bench" type="text" value="180">
+            </p>
+            <p>
+              上水平梯段宽度：<input class="bench" type="text" value="500">
+            </p>
+            <p>
+              下水平梯段厚度：<input class="bench" type="text" value="180">
+            </p>
+            <p>
+              下水平梯段宽度：<input class="bench" type="text" value="500">
+            </p>
+          </div>
         </div>
-        <div class="btn">
-            <input type="button" value="取消" class="cancel">
-            <input type="button" value="应用" class="confirm">
+        <div class="ladderBeams">
+          梁宽：<input class="ladderBeam" type="text" value="200">
+          梁高：<input class="ladderBeam" type="text" value="400">
+          挑耳宽：<input class="ladderBeam" type="text" value="200">
+          挑耳高：<input class="ladderBeam" type="text" value="200">
+          下沉高度：<input class="ladderBeam" type="text" value="200">
         </div>
+      </form>
     </div>
+    <div class="btn">
+      <input type="button" value="取消" class="cancel">
+      <input type="button" value="应用" class="confirm">
+    </div>
+  </div>
 
 
-    <script type="module">
-        import common from '../js/common.js'
-        import {Stairs,Bench,LadderBeam,Feng} from '../js/object.js'
-      
-        let scene,camera,renderer,raycaster
-        let mesh1,mesh2,mesh3,mesh4
-        let box=$('.box')
-        let flag=false
+  <script type="module">
+    import common from '../js/common.js'
+    import { Stairs, Bench, LadderBeam, Feng } from '../js/object.js'
 
-        scene=new THREE.Scene()
-        renderer=new THREE.WebGLRenderer()
-        common.initLight(scene)
-        camera=common.initCamera(scene)
-        common.initRenderer(renderer)
-        render()
-        raycaster=new THREE.Raycaster()
-        let axes=new THREE.AxesHelper(8000)
-        scene.add(axes)
+    let scene, camera, renderer, raycaster
+    let mesh1, mesh2, mesh3, mesh4
+    let currentMesh
+    let box = $('.box')
+    let flag = 0
 
-        let stairs1=new Stairs()
-        let stairs2=new Stairs()
-        let bench1=new Bench()
-        let bench2=new Bench()
-        let ladderBeam1=new LadderBeam()
-        let ladderBeam2=new LadderBeam()
-        let feng=new Feng()
+    scene = new THREE.Scene()
+    renderer = new THREE.WebGLRenderer()
+    common.initLight(scene)
+    camera = common.initCamera(scene)
+    common.initRenderer(renderer)
+    render()
+    raycaster = new THREE.Raycaster()
+    let axes = new THREE.AxesHelper(8000)
+    scene.add(axes)
 
-        let controls = new THREE.OrbitControls(camera, renderer.domElement)
-        controls.addEventListener('change',render)
+    let stairs1 = new Stairs()
+    let stairs2 = new Stairs()
+    let bench1 = new Bench()
+    let bench2 = new Bench()
+    let ladderBeam1 = new LadderBeam()
+    let ladderBeam2 = new LadderBeam()
+    let feng = new Feng()
 
-        beforeBreak()
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+    controls.addEventListener('change', render)
+
+    beforeBreak()
 
 
-        document.addEventListener('click',function(e){
-            let mouse=common.getStdVector(e)
-            let raycaster=new THREE.Raycaster()
-            raycaster.setFromCamera(mouse,camera)
-            let intersects=raycaster.intersectObjects(scene.children,true)
-            if(intersects.length>0){
-                box[0].style.visibility='visible'
-                let name=intersects[0].object.name
-                if(name=='mesh1'){
-                  console.log('d')
-                }
-            }
-        })
-        $('.cancel')[0].addEventListener('click',function(e){
-            e.stopPropagation()
-            box[0].style.visibility='hidden'
-            flag=false
-        })
-        $('.confirm')[0].addEventListener('click',function(e){
-            e.stopPropagation()
-            box[0].style.visibility='hidden'
+    let stairsBenchom = $('.stairsBench')[0]
+    let ladderBeamsDom = $('.ladderBeams')[0]
+    let ladderBeamDom = $('.ladderBeam')
+    let stairsDom = $('.stairs')
+    let benchDom = $('.bench')
 
-            if(!flag){
-                initPingfeng()
-            }
-            initValue()
-            $('#form2').style.display='block'
-            editStairs(stairs,bench)
-        })
-        
-        function render() {
-            renderer.render(scene,camera)
-            requestAnimationFrame(render)
+    document.addEventListener('click', function (e) {
+      let mouse = common.getStdVector(e)
+      let raycaster = new THREE.Raycaster()
+      raycaster.setFromCamera(mouse, camera)
+      let intersects = raycaster.intersectObjects(scene.children, true)
+      if (intersects.length > 0) {
+        box[0].style.visibility = 'visible'
+        let name = intersects[0].object.name
+        if (flag) {
+          currentMesh = intersects[0].object
+          if (name == 'mesh1') {
+            show(stairsBenchom)
+            readValue(stairs1, stairsDom)
+            readValue(bench1, benchDom)
+          } else if (name == 'mesh2') {
+            show(ladderBeamsDom)
+            readValue(ladderBeam1, ladderBeamDom)
+          } else if (name == 'mesh3') {
+            show(stairsBenchom)
+            readValue(stairs2, stairsDom)
+            readValue(bench2, benchDom)
+          } else {
+            show(ladderBeamsDom)
+            readValue(ladderBeam2, ladderBeamDom)
+          }
         }
-        function beforeBreak(){
-            let stairsVertices1=stairs1.createStairsVertices()
-            let geometry1=createGeometry(stairsVertices1,stairs1.depth)
-            let material1=new THREE.MeshLambertMaterial({
-                color:0xff0000,
-                side:THREE.DoubleSide
-            })
-            mesh1=new THREE.Mesh(geometry1,material1)
-            mesh1.name='mesh1'
+      }
+    })
+    $('.cancel')[0].addEventListener('click', function (e) {
+      e.stopPropagation()
+      box[0].style.visibility = 'hidden'
+    })
+    $('.confirm')[0].addEventListener('click', function (e) {
+      e.stopPropagation()
+      box[0].style.visibility = 'hidden'
+      if (!flag) {
+        initPingfeng()
+      }
+      flag = 1
+      $('#form2').style.display = 'block'
 
-            let geometry2=new THREE.BoxGeometry(200,400,2900)
-            geometry2.translate(stairs1.num*stairs1.width+100,stairs1.num*stairs1.height,2900/2)
-            let material2=new THREE.MeshLambertMaterial({
-                color:0x00ff00,
-            })
-            mesh2=new THREE.Mesh(geometry2,material2)
-            scene.add(mesh1,mesh2)
+      if (currentMesh) {
+        if (currentMesh.name == 'mesh1') {
+          writeValue(stairs1, stairsDom)
+          writeValue(bench1, benchDom)
+          editStairs(stairs1, bench1, mesh1)
+        } else if (currentMesh.name == 'mesh2') {
+          writeValue(ladderBeam1, ladderBeamDom)
+          let ladderBeamVertice1 = ladderBeam1.createLadderBeamVertices(stairs1, bench1, feng)
+          mesh2.geometry.dispose()
+          mesh2.geometry = createGeometry(ladderBeamVertice1, stairs1.depth)
+        } else if (currentMesh.name == 'mesh3') {
+          writeValue(stairs2, stairsDom)
+          writeValue(bench2, benchDom)
+          editStairs(stairs2, bench2, mesh2)
+        } else {
+          writeValue(ladderBeam2, ladderBeamDom)
+          let ladderBeamVertice2 = ladderBeam1.createLadderBeamVertices(stairs2, bench2, feng)
+          mesh4.geometry.dispose()
+          mesh4.geometry = createGeometry(ladderBeamVertice2, stairs1.depth)
+        }
+      }
 
-            let stairsVertices2=stairs2.createStairsVertices()
-            let geometry3=createGeometry(stairsVertices2,stairs2.depth)
-            mesh3=new THREE.Mesh(geometry3,material1)
-            mesh3.name='mesh3'
-            mesh3.rotateY(Math.PI)
-            let geometry4=geometry2.clone()
-            mesh4=new THREE.Mesh(geometry4,material2)
-            mesh4.rotateY(Math.PI)
-            let group=new THREE.Group()
-            group.add(mesh3,mesh4)
-            group.translateZ(100+stairs1.depth*2)
-            group.translateX(12*260)
-            scene.add(group)
-        }
-        function afterBreak(){
-            initPingfeng()
-        }
-        function initPingfeng(){
-            let pingfeng=$('.pingfeng')
-            for(let i=0;i<pingfeng.length;i++){
-                feng['f'+(i+1)]=Number(pingfeng[i].value)
-            }
-            
-            editStairs(stairs1,bench1,mesh1)
-            editStairs(stairs1,bench1,mesh2)
+    })
 
-            mesh1.position.set(0,0,feng.f4)           
-            mesh3.position.set(0,0,-feng.f1)
+    function render() {
+      renderer.render(scene, camera)
+      requestAnimationFrame(render)
+    }
+    function beforeBreak() {
+      let stairsVertices1 = stairs1.createStairsVertices()
+      let geometry1 = createGeometry(stairsVertices1, stairs1.depth)
+      let material1 = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+        side: THREE.DoubleSide
+      })
+      mesh1 = new THREE.Mesh(geometry1, material1)
+      mesh1.name = 'mesh1'
 
-            let ladderBeamVertice1=ladderBeam1.createLadderBeamVertices(stairs1,bench1,feng)
-            mesh2.geometry.dispose()
-            mesh2.geometry=createGeometry(ladderBeamVertice1,stairs1.depth) 
-            $('#form1').style.display='none'
-            flag=true
-        }
+      let geometry2 = new THREE.BoxGeometry(200, 400, 2900)
+      geometry2.translate(stairs1.num * stairs1.width + 100, stairs1.num * stairs1.height, 2900 / 2)
+      let material2 = new THREE.MeshLambertMaterial({
+        color: 0x00ff00,
+      })
+      mesh2 = new THREE.Mesh(geometry2, material2)
+      mesh2.name = 'mesh2'
+      scene.add(mesh1, mesh2)
 
-        function editStairs(stairs,bench,mesh){
-            mesh.geometry.dispose()
-            // console.log(stairsVertices)
-            if(mesh.name=='mesh1'){
-              let stairsVertices=stairs1.createStairsVertices()
-              let benchVertices=bench1.createBenchVertices(stairs1)
-              stairsVertices.shift()
-              stairsVertices.unshift(...benchVertices[0])
-              stairsVertices.push(...benchVertices[1])
-              mesh.geometry=createGeometry(stairsVertices,stairs1.depth-feng.f3-feng.f4)
-            }else{
-              let stairsVertices=stairs1.createStairsVertices()
-              let benchVertices=bench1.createBenchVertices(stairs1)
-              stairsVertices.shift()
-              stairsVertices.unshift(...benchVertices[0])
-              stairsVertices.push(...benchVertices[1])
-              mesh3.geometry=createGeometry(stairsVertices,stairs2.depth-feng.f1-feng.f2)
-            }
-        }
-       
-        function createGeometry(stairsVertices,depth){
-            let shape=new THREE.Shape(stairsVertices)
-            let path=new THREE.LineCurve3(new THREE.Vector3(stairs1.totalWidth,stairs1.totalHeight,0),new THREE.Vector3(stairs1.totalWidth,stairs1.totalHeight,1400))
-            let geometry=new THREE.ExtrudeGeometry(shape,{
-              depth:depth,
-              bevelEnabled:false,
-              // extrudePath:path
-            })
-            return geometry
-        }
-        
-        function $(v){
-            let dom
-            let name=v.substring(1)
-            if(v.indexOf('#')==0){
-                dom=document.getElementById(name)
-            }else if(v.indexOf('.')==0){
-                dom=document.getElementsByClassName(name)
-            }else{
-                console.log(v)
-            }
-            return dom
-        }
-        function initStairsValue(stairs){
-          stairs.totalHeight=Number($('.stairs')[1].value)
-          stairs.num=Number($('.stairs')[2].value)
-          console.log(stairs)
-        }
-        function initValue(){
-            bench.h=Number($('.bench')[1].value)
-            bench.fh=Number($('.bench')[2].value)
-            bench.uh=Number($('.bench')[3].value)
-            bench.fw=Number($('.bench')[4].value)
-            bench.uw=Number($('.bench')[5].value)
-            // console.log(bench)
-            ladderBeam.beamWidth=Number($('.ladderBeam')[1].value)
-            ladderBeam.beamHeight=Number($('.ladderBeam')[2].value)
-            ladderBeam.tiaoerWidth=Number($('.ladderBeam')[3].value)
-            ladderBeam.totalHeight=Number($('.ladderBeam')[4].value)
-            ladderBeam.sinkHeight=Number($('.ladderBeam')[5].value)
-            // console.log(ladderBeam)
-        }
-    </script>
+      let stairsVertices2 = stairs2.createStairsVertices()
+      let geometry3 = createGeometry(stairsVertices2, stairs2.depth)
+      mesh3 = new THREE.Mesh(geometry3, material1)
+      mesh3.name = 'mesh3'
+      mesh3.rotateY(Math.PI)
+      let geometry4 = geometry2.clone()
+      mesh4 = new THREE.Mesh(geometry4, material2)
+      mesh4.rotateY(Math.PI)
+      mesh4.name = 'mesh4'
+      let group = new THREE.Group()
+      group.add(mesh3, mesh4)
+      group.translateZ(100 + stairs1.depth * 2)
+      group.translateX(12 * 260)
+      scene.add(group)
+    }
+
+    function initPingfeng() {
+      let pingfeng = $('.pingfeng')
+      for (let i = 0; i < pingfeng.length; i++) {
+        feng['f' + (i + 1)] = Number(pingfeng[i].value)
+      }
+
+      editStairs(stairs1, bench1, mesh1)
+      editStairs(stairs1, bench1, mesh2)
+
+      mesh1.position.set(0, 0, feng.f4)
+      mesh3.position.set(0, 0, -feng.f1)
+
+      let ladderBeamVertice1 = ladderBeam1.createLadderBeamVertices(stairs1, bench1, feng)
+      mesh2.geometry.dispose()
+      mesh2.geometry = createGeometry(ladderBeamVertice1, stairs1.depth)
+      let ladderBeamVertice2 = ladderBeam1.createLadderBeamVertices(stairs2, bench2, feng)
+      mesh4.geometry.dispose()
+      mesh4.geometry = createGeometry(ladderBeamVertice2, stairs1.depth)
+      $('#form1').style.display = 'none'
+      flag = true
+    }
+
+    function editStairs(stairs, bench, mesh) {
+      mesh.geometry.dispose()
+      // console.log(stairsVertices)
+      if (mesh.name == 'mesh1') {
+        let stairsVertices = stairs1.createStairsVertices()
+        let benchVertices = bench1.createBenchVertices(stairs1)
+        stairsVertices.shift()
+        stairsVertices.unshift(...benchVertices[0])
+        stairsVertices.push(...benchVertices[1])
+        mesh.geometry = createGeometry(stairsVertices, stairs1.depth - feng.f3 - feng.f4)
+      } else {
+        let stairsVertices = stairs2.createStairsVertices()
+        let benchVertices = bench2.createBenchVertices(stairs2)
+        stairsVertices.shift()
+        stairsVertices.unshift(...benchVertices[0])
+        stairsVertices.push(...benchVertices[1])
+        mesh3.geometry = createGeometry(stairsVertices, stairs2.depth - feng.f1 - feng.f2)
+      }
+    }
+
+    function createGeometry(stairsVertices, depth) {
+      let shape = new THREE.Shape(stairsVertices)
+      // let path = new THREE.LineCurve3(new THREE.Vector3(stairs1.totalWidth, stairs1.totalHeight, 0), new THREE.Vector3(stairs1.totalWidth, stairs1.totalHeight, 1400))
+      let geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: depth,
+        bevelEnabled: false,
+        // extrudePath:path
+      })
+      return geometry
+    }
+
+    function writeValue(obj, dom) {
+      Object.keys(obj).forEach((key, index) => {
+        obj[key] = Number(dom[index].value)
+      })
+    }
+    function readValue(obj, dom) {
+      Object.keys(obj).forEach((key, index) => {
+        dom[index].value = obj[key]
+      })
+    }
+
+    function show(dom) {
+      $('.stairsBench')[0].style.display = 'none'
+      $('.ladderBeams')[0].style.display = 'none'
+      $('#form1').style.display = 'none'
+      dom.style.display = 'block'
+    }
+
+    function $(v) {
+      let dom
+      let name = v.substring(1)
+      if (v.indexOf('#') == 0) {
+        dom = document.getElementById(name)
+      } else if (v.indexOf('.') == 0) {
+        dom = document.getElementsByClassName(name)
+      } else {
+        console.log(v)
+      }
+      return dom
+    }
+  </script>
 </body>
+
 </html>
