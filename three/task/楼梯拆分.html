@@ -1,294 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../css/common.css">
-    <link rel="stylesheet" href="../css/stairs.css">
-    <script src="../js/three.min.js"></script>
-    <script src="../js/OrbitControls.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/stairs.css">
+  <script src="../js/three.min.js"></script>
+  <script src="../js/OrbitControls.js"></script>
 </head>
+
 <body>
-    <div class="box">
-        <h2 class="header">
-            <span>楼梯拆分参数设置</span>
-        </h2>
-        <div class="form">
-            <form action="" id="form1">
-                <label for="first">拼缝1</label>
-                <input type="text" id="first" class="pingfeng" value="20">
-                <label for="second">拼缝2</label>
-                <input type="text" id="second" class="pingfeng" value="20">
-                <label for="third">拼缝3</label>
-                <input type="text" id="third" class="pingfeng" value="20">
-                <label for="forth">拼缝4</label>
-                <input type="text" id="forth" class="pingfeng" value="20">
-                <label for="fifth">拼缝5</label>
-                <input type="text" id="fifth" class="pingfeng" value="30">
-                <label for="six">拼缝6</label>
-                <input type="text" id="six" class="pingfeng" value="20">
-            </form>
-            <form action="" id=form2>
-                <div class="stairs">
-                    楼梯总高度：<input type="text" class="stairs" value="2900">
-                    台阶数：<input type="text" class="stairs" value="17">
-                </div>
-                <div class="bench">
-                    板厚：<input type="text" class="bench" value="180">
-                    上水平梯段厚度：<input type="text" class="bench" value="180">
-                    下水平梯段厚度：<input type="text" class="bench" value="180">
-                    上水平梯段宽度：<input type="text" class="bench" value="500">
-                    下水平梯段宽度：<input type="text" class="bench" value="500">
-                </div>
-                <div class="ladderBeam">
-                    梁宽：<input type="text" class="ladderBeam" value="200">
-                    梁高：<input type="text" class="ladderBeam" value="400">
-                    挑耳宽：<input type="text" class="ladderBeam" value="200">
-                    挑耳高：<input type="text" class="ladderBeam" value="200">
-                    下沉高度：<input type="text" class="ladderBeam" value="200">
-                </div>
-            </form>
+  <div class="box">
+    <h2 class="header">
+      <span>楼梯拆分参数设置</span>
+    </h2>
+    <div class="form">
+      <form action="" id=form>
+        <div class="seam">
+          <p>
+            拼缝1:<input type="text" value="20">
+          </p>
+          <p>
+            拼缝2:<input type="text" value="20">
+          </p>
+          <p>
+            拼缝3:<input type="text" value="20">
+          </p>
+          <p>
+            拼缝4:<input type="text" value="20">
+          </p>
+          <p>
+            拼缝5:<input type="text" value="30">
+          </p>
+          <p>
+            拼缝6:<input type="text" value="20">
+          </p>
         </div>
-        <div class="btn">
-            <input type="button" value="取消" class="cancel">
-            <input type="button" value="应用" class="confirm">
+        <div class="stairsFlight">
+          <div class="stairs">
+            <p>
+              踏步宽度(x)：<input type="text" value="260" disabled>
+            </p>
+            <p>
+              踏步高度：<input type="text" value="161" disabled>
+            </p>
+            <p>
+              踏步长度(z)：<input type="text" value="1400">
+            </p>
+            <p>
+              台阶数：<input type="text" value="17">
+            </p>
+            <p>
+              楼梯总高度：<input type="text" value="2900">
+            </p>
+            <p>
+              楼梯总宽度：<input type="text" value="4420">
+            </p>
+          </div>
+          <div class="flight">
+            <p>
+              板厚：<input   type="text" value="180">
+            </p>
+            <p>
+              上水平梯段厚度：<input   type="text" value="180">
+            </p>
+            <p>
+              上水平梯段宽度：<input   type="text" value="500">
+            </p>
+            <p>
+              下水平梯段厚度：<input   type="text" value="180">
+            </p>
+            <p>
+              下水平梯段宽度：<input   type="text" value="500">
+            </p>
+          </div>
         </div>
+        <div class="ladderBeam">
+          <p>
+            梁宽：<input type="text" value="200">
+          </p>
+          <p>
+            梁高：<input type="text" value="400">
+          </p>
+          <p>
+            挑耳宽：<input type="text" value="200">
+          </p>
+          <p>
+            挑耳高：<input type="text" value="200">
+          </p>
+          <p>
+            下沉高度：<input type="text" value="200">
+          </p>
+        </div>
+      </form>
     </div>
+    <div class="btn">
+      <input type="button" value="取消" class="cancel">
+      <input type="button" value="应用" class="confirm">
+    </div>
+  </div>
 
 
-    <script type="module">
-        import common from '../js/common.js'
-        import {Stairs} from '../js/object.js'
-        let s=new Stairs()
-      
-        // 楼梯
-        const stairs={
-            num:17,
-            totalWidth:4420,
-            totalHeight:2900,
-            width:260,
-            height:161,
-            depth:1400
+  <script type="module">
+    import common from '../js/common.js'
+    import { Stairs, Flight, LadderBeam, Seam } from '../js/object.js'
+
+    let scene, camera, renderer, raycaster,currentMesh
+    let stairsMesh1, stairsMesh2, ladderBeamMesh1, ladderBeamMesh2
+    
+    let clickNum = 0 //鼠标点击次数,值为0次时才会展示修改拼缝的dom节点
+
+    scene = new THREE.Scene()
+    renderer = new THREE.WebGLRenderer()
+    common.initLight(scene)
+    camera = common.initCamera(scene)
+    common.initRenderer(renderer)
+    render()
+    raycaster = new THREE.Raycaster()
+    let axes = new THREE.AxesHelper(8000)
+    scene.add(axes)
+
+    // 楼梯对象
+    let stairs1 = new Stairs()
+    let stairs2 = new Stairs()
+    // 梯段对象
+    let flight1 = new Flight()
+    let flight2 = new Flight()
+    // 梯梁对象
+    let ladderBeam1 = new LadderBeam()
+    let ladderBeam2 = new LadderBeam()
+    // 拼缝对象
+    let seam = new Seam()
+
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+    controls.addEventListener('change', render)
+
+    beforeBreak()
+
+    // 相关的dom节点
+    let boxDom=document.getElementsByClassName('box')[0]
+    let stairsFlightDom =document.getElementsByClassName('stairsFlight')[0]
+    let stairsDom =document.getElementsByClassName('stairs')[0]
+    let flightDom =document.getElementsByClassName('flight')[0]
+    let ladderBeamDom =document.getElementsByClassName('ladderBeam')[0]
+    let seamDom=document.getElementsByClassName('seam')[0]
+
+    document.addEventListener('click', function (e) {
+      let mouse = common.getStdVector(e)
+      raycaster.setFromCamera(mouse, camera)
+      let intersects = raycaster.intersectObjects(scene.children, true)
+      if (intersects.length > 0) {
+        boxDom.style.visibility = 'visible'
+        if(!clickNum){
+          show(seamDom)
+        }else{
+          currentMesh=intersects[0].object
+          let name = intersects[0].object.name
+          // 根据name值展示哪部分dom节点
+          if(name=='stairs'){
+            show(stairsFlightDom)
+            let nodes1=getChildNodes(stairsDom,'INPUT')
+            let nodes2=getChildNodes(flightDom,'INPUT')
+            readValue(currentMesh.userData.stairs,nodes1)
+            readValue(currentMesh.userData.flight,nodes2)
+          }else if(name=='ladderBeam'){
+            show(ladderBeamDom)
+            let nodes=getChildNodes(ladderBeamDom,'INPUT')
+            readValue(currentMesh.userData.ladderBeam,nodes)
+          }
         }
-        // 梯梁
-        const ladderBeam={
-            beamWidth:200,
-            beamHeight:400,
-            tiaoerWidth:200,
-            tiaoerHeight:200,
-            sinkHeight:200
-        }
-        // 梯段
-        const bench={
-            h:180,
-            fh:180,
-            fw:500,
-            uw:500,
-            uh:180
-        }
-        // 拼缝
-        const feng={
-            f1:20,
-            f2:20,
-            f3:20,
-            f4:20,
-            f5:30,
-            f6:20
-        }
-
-        let box=$('.box')
-        let flag=false
-        let scene,camera,renderer
-        let mesh,mesh2,mesh3,mesh4
-
-        beforeBreak()
-        renderer=new THREE.WebGLRenderer()
-        common.initLight(scene)
-        camera=common.initCamera(scene)
-        common.initRenderer(renderer)
-        render()
-
-        let controls = new THREE.OrbitControls(camera, renderer.domElement)
-        controls.addEventListener('change',render)
-
-        document.addEventListener('click',function(e){
-            let mouse=common.getStdVector(e)
-            let raycaster=new THREE.Raycaster()
-            raycaster.setFromCamera(mouse,camera)
-            let intersects=raycaster.intersectObjects(scene.children,true)
-            if(intersects.length>0){
-                box[0].style.visibility='visible'
-            }
-        })
-        $('.cancel')[0].addEventListener('click',function(e){
-            e.stopPropagation()
-            box[0].style.visibility='hidden'
-            flag=false
-        })
-        $('.confirm')[0].addEventListener('click',function(e){
-            e.stopPropagation()
-            box[0].style.visibility='hidden'
-
-            if(!flag){
-                initPingfeng()
-            }
-            initValue()
-            $('#form2').style.display='block'
-            editStairs(stairs,bench)
-
-            
-        })
         
-        function render() {
-            renderer.render(scene,camera)
-            requestAnimationFrame(render)
+      }
+    })
+    document.getElementsByClassName('cancel')[0].addEventListener('click', function (e) {
+      e.stopPropagation()
+      boxDom.style.visibility = 'hidden'
+    })
+    document.getElementsByClassName('confirm')[0].addEventListener('click', function (e) {
+      e.stopPropagation()
+      boxDom.style.visibility = 'hidden'
+      if (!clickNum) {
+        initSeam()
+      }else{
+        if(currentMesh.name=='stairs'){
+          let nodes1=getChildNodes(stairsDom,'INPUT')
+          let nodes2=getChildNodes(flightDom,'INPUT')
+          let depthBefore=currentMesh.userData.stairs.depth
+          writeValue(currentMesh.userData.stairs,nodes1)
+          writeValue(currentMesh.userData.flight,nodes2)
+          let vertice=editStairsVertices(currentMesh.userData.stairs,currentMesh.userData.flight)
+          currentMesh.geometry.dispose()
+          currentMesh.geometry=createGeometry(vertice,currentMesh.userData.stairs.depth)
+          currentMesh.geometry.translate(0,0,depthBefore-currentMesh.userData.stairs.depth)
+        }else if(currentMesh.name=='ladderBeam'){
+          let nodes=getChildNodes(ladderBeamDom,'INPUT')
+          writeValue(currentMesh.userData.ladderBeam,nodes)
+          let stairs=currentMesh.userData.stairs
+          let flight=currentMesh.userData.flight
+          let ladderBeamVertice = currentMesh.userData.ladderBeam.createLadderBeamVertices(stairs, flight, seam)
+          currentMesh.geometry.dispose()
+          currentMesh.geometry = createGeometry(ladderBeamVertice, stairs.depth*2+100)
         }
-        function beforeBreak(){
-            let stairsVertices=createStairsVertices(stairs)
-            let geometry=createGeometry(stairsVertices,stairs.depth)
-            let material=new THREE.MeshLambertMaterial({
-                color:0xff0000,
-                side:THREE.DoubleSide
-            })
-            mesh=new THREE.Mesh(geometry,material)
-            let geometry2=new THREE.BoxGeometry(200,400,2900)
-            geometry2.translate(stairs.num*stairs.width+100,stairs.num*stairs.height,2900/2)
-            let material2=new THREE.MeshLambertMaterial({
-                color:0x00ff00,
-            })
-            mesh2=new THREE.Mesh(geometry2,material2)
-            scene=new THREE.Scene()
-            scene.add(mesh,mesh2)
+      }
+      currentMesh=null
+    })
+   
 
-            let axes=new THREE.AxesHelper(8000)
-            scene.add(axes)
+    function render() {
+      renderer.render(scene, camera)
+      requestAnimationFrame(render)
+    }
+    // 拆分前模型对象创建初始化
+    function beforeBreak() {
+      let stairsVertices1 = stairs1.createStairsVertices()
+      let geometry1 = createGeometry(stairsVertices1, stairs1.depth)
+      let material1 = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+        side: THREE.DoubleSide
+      })
+      stairsMesh1 = new THREE.Mesh(geometry1, material1)
+      stairsMesh1.name = 'stairs'
+      stairsMesh1.userData={stairs:stairs1,flight:flight1}
 
-            let geometry3=geometry.clone()
-            mesh3=new THREE.Mesh(geometry3,material)
-            mesh3.rotateY(Math.PI)
-            let geometry4=geometry2.clone()
-            mesh4=new THREE.Mesh(geometry4,material2)
-            mesh4.rotateY(Math.PI)
-            // scene.add(mesh3,mesh4)
+      let geometry2 = new THREE.BoxGeometry(200, 400, 2900)
+      geometry2.translate(stairs1.num * stairs1.width + 100, stairs1.num * stairs1.height, 2900 / 2)
+      let material2 = new THREE.MeshLambertMaterial({
+        color: 0x00ff00,
+      })
+      ladderBeamMesh1 = new THREE.Mesh(geometry2, material2)
+      ladderBeamMesh1.name = 'ladderBeam'
+      ladderBeamMesh1.userData={stairs:stairs1,flight:flight1,ladderBeam:ladderBeam1}
+      scene.add(stairsMesh1, ladderBeamMesh1)
 
-            let group=new THREE.Group()
-            group.add(mesh3,mesh4)
-            group.translateZ(100+stairs.depth*2)
-            group.translateX(12*260)
-            scene.add(group)
-        }
-        function afterBreak(){
-            initPingfeng()
-        }
-        function initPingfeng(){
-            let pingfeng=$('.pingfeng')
-            for(let i=0;i<pingfeng.length;i++){
-                feng['f'+(i+1)]=Number(pingfeng[i].value)
-            }
-            
-            editStairs(stairs,bench)
-            mesh.position.set(0,0,feng.f4)           
-            mesh3.position.set(0,0,-feng.f1)
+      let stairsVertices2 = stairs2.createStairsVertices()
+      let geometry3 = createGeometry(stairsVertices2, stairs2.depth)
+      stairsMesh2 = new THREE.Mesh(geometry3, material1)
+      stairsMesh2.name = 'stairs'
+      stairsMesh2.userData={stairs:stairs2,flight:flight2}
+      stairsMesh2.rotateY(Math.PI)
+      let geometry4 = geometry2.clone()
+      ladderBeamMesh2 = new THREE.Mesh(geometry4, material2)
+      ladderBeamMesh2.rotateY(Math.PI)
+      ladderBeamMesh2.name = 'ladderBeam'
+      ladderBeamMesh2.userData={stairs:stairs2,flight:flight2,ladderBeam:ladderBeam2}
+      let group = new THREE.Group()
+      group.add(stairsMesh2, ladderBeamMesh2)
+      group.translateZ(100 + stairs1.depth * 2)
+      group.translateX(12 * 260)
+      scene.add(group)
+    }
 
-            let ladderBeamVertice=createLadderBeamVertices(stairs,bench,ladderBeam,feng)
-            mesh2.geometry.dispose()
-            mesh2.geometry=createGeometry(ladderBeamVertice,stairs.depth) 
-            $('#form1').style.display='none'
-            flag=true
-        }
+    // 裂缝值初始化后的模型重新构建
+    function initSeam() {
+      let nodes=getChildNodes(seamDom,'INPUT')
+      writeValue(seam,nodes)
+      let v1=editStairsVertices(stairs1,flight1)
+      let v2=editStairsVertices(stairs2,flight2)
+      stairsMesh1.geometry.dispose()
+      stairsMesh2.geometry.dispose()
+      stairsMesh1.geometry=createGeometry(v1,stairs1.depth-seam.f3-seam.f4)
+      stairsMesh2.geometry=createGeometry(v2,stairs2.depth-seam.f1-seam.f2)
+      stairsMesh1.position.set(0, 0, seam.f4)
+      stairsMesh2.position.set(0, 0, -seam.f1)
 
-        function editStairs(stairs,bench){
-            mesh.geometry.dispose()
-            let stairsVertices=createStairsVertices(stairs)
-            let benchVertices=createBenchVertices(stairs,bench)
-            stairsVertices.shift()
-            stairsVertices.unshift(...benchVertices[0])
-            stairsVertices.push(...benchVertices[1])
-            // console.log(stairsVertices)
-            mesh.geometry=createGeometry(stairsVertices,stairs.depth-feng.f3-feng.f4)
-            mesh3.geometry.dispose()
-            mesh3.geometry=createGeometry(stairsVertices,stairs.depth-feng.f1-feng.f2) 
-        }
-        // function createStairsVertices(stairs) {
-        //     let vertices=[]
-        //     stairs.width=stairs.totalWidth/stairs.num
-        //     stairs.height=stairs.totalHeight/stairs.num
-        //     for(let i=0;i<stairs.num;i++){
-        //         let vector1=new THREE.Vector2(i*stairs.width,i*stairs.height)
-        //         let vector2=new THREE.Vector2(i*stairs.width,(i+1)*stairs.height)
-        //         vertices.push(vector1)
-        //         vertices.push(vector2)
-        //     }
-        //     vertices.push(new THREE.Vector2(stairs.num*stairs.width,stairs.num*stairs.height))
+      let ladderBeamVertice1 = ladderBeam1.createLadderBeamVertices(stairs1, flight1, seam)
+      ladderBeamMesh1.geometry.dispose()
+      ladderBeamMesh1.geometry = createGeometry(ladderBeamVertice1, stairs1.depth*2+100)
+      ladderBeamMesh2.geometry.dispose()
+      let ladderBeamVertice2 = ladderBeam2.createLadderBeamVertices(stairs2, flight2, seam)
+      ladderBeamMesh2.geometry = createGeometry(ladderBeamVertice2, stairs2.depth*2+100)
+      ladderBeamMesh1.position.set(0,-seam.f6)
+      ladderBeamMesh2.position.set(0,-seam.f6)
+      clickNum++
+    }
 
-        //     vertices.push(new THREE.Vector2(stairs.num*stairs.width,stairs.num*stairs.height-200))
-        //     vertices.unshift(new THREE.Vector2(0,-200))
-        //     // console.log(vertices)
-        //     return vertices
-        // }
-        // function createBenchVertices(stairs,bench) {
-        //     let vertices=[],upVertice=[],underVertice=[]
-        //     let k=stairs.height/stairs.width // 161/260
-        //     // y=k*x-h
-        //     underVertice.push(new THREE.Vector2((-bench.uh+bench.h)/k,-bench.uh))
-        //     underVertice.push(new THREE.Vector2(-bench.uw,-bench.uh),new THREE.Vector2(-bench.uw,0))
+    // 将楼梯的二维图形顶点数组和梯段的顶点的二维数组合并成一个数组，将楼梯台阶和梯段作为一个整体
+    function editStairsVertices(stairs, flight) {
+      let stairsVertices = stairs.createStairsVertices()
+      let flightVertices = flight.createFlightVertices(stairs)
+      stairsVertices.shift()
+      stairsVertices.unshift(...flightVertices[0])
+      stairsVertices.push(...flightVertices[1])
+      return stairsVertices
+    }
 
-        //     upVertice.push(new THREE.Vector2(stairs.totalWidth,stairs.totalHeight+bench.fh),new THREE.Vector2(stairs.totalWidth+bench.fw,stairs.totalHeight+bench.fh))
-        //     upVertice.push(new THREE.Vector2(stairs.totalWidth+bench.fw,stairs.totalHeight))
-        //     upVertice.push(new THREE.Vector2((stairs.totalHeight+bench.h)/k,stairs.totalHeight))
-        //     vertices.push(underVertice,upVertice)
-        //     // console.log(vertices)
-        //     return vertices
-        // }
-        // function createLadderBeamVertices(stairs,bench,ladderBeam,feng) {
-        //     let  vertices=[]
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5,stairs.totalHeight+bench.fh))
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5+ladderBeam.beamWidth,stairs.totalHeight+bench.fh))
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5+ladderBeam.beamWidth,stairs.totalHeight+bench.fh-ladderBeam.beamHeight))
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5,stairs.totalHeight+bench.fh-ladderBeam.beamHeight))
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5-ladderBeam.tiaoerWidth,stairs.totalHeight+bench.fh-ladderBeam.beamHeight))
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5-ladderBeam.tiaoerWidth,stairs.totalHeight+bench.fh-ladderBeam.beamHeight+ladderBeam.tiaoerHeight))
-        //     vertices.push(new THREE.Vector2(stairs.totalWidth+bench.fw+feng.f5,stairs.totalHeight+bench.fh-ladderBeam.beamHeight+ladderBeam.tiaoerHeight))
-        //     console.log(vertices)
-        //     return vertices
-        // }
-        function createGeometry(stairsVertices,depth){
-            let shape=new THREE.Shape(stairsVertices)
-            let geometry=new THREE.ExtrudeGeometry(shape,{depth:depth}) //stairs.depth-feng.f3-feng.f4
-            return geometry
+    /*
+    * 输入 stairsVertices：二维顶点数组，depth：挤压图形在z轴的长度
+    * 输出 挤压后的geometry
+    */
+    function createGeometry(stairsVertices, depth) {
+      let shape = new THREE.Shape(stairsVertices)
+      let geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: depth,
+        bevelEnabled: false,
+      })
+      return geometry
+    }
+
+    /*
+    * 输入 obj：数据对象，比如stair；dom：input元素
+    * 作用：将界面上的值传给数据对象
+    */
+    function writeValue(obj, dom) {
+      Object.keys(obj).forEach((key, index) => {
+        obj[key] = Number(dom[index].value).toFixed(2)*1
+      })
+    }
+    /*
+    * 输入 obj：数据对象，比如stair；dom：input元素
+    * 作用：将数据对象的值赋给对应的input元素
+    */
+    function readValue(obj, dom) {
+      Object.keys(obj).forEach((key, index) => {
+        dom[index].value = obj[key]
+      })
+    }
+
+    // 决定展示哪个dom节点
+    function show(dom) {
+      stairsFlightDom.style.display = 'none'
+      ladderBeamDom.style.display = 'none'
+      seamDom.style.display='none'
+      dom.style.display = 'block'
+    }
+
+    /*
+    * 输入 dom：dom节点；type：节点类型
+    * 输出 dom节点下的所有指定类型的子节点
+    */
+    function getChildNodes(dom,type){
+      let nodes=[]
+      for(let i=0;i<dom.childNodes.length;i++){
+        if(dom.childNodes[i].childNodes.length>0){
+          nodes=nodes.concat(getChildNodes(dom.childNodes[i],type))
         }
-        function $(v){
-            let dom
-            let name=v.substring(1)
-            if(v.indexOf('#')==0){
-                dom=document.getElementById(name)
-            }else if(v.indexOf('.')==0){
-                dom=document.getElementsByClassName(name)
-            }else{
-                console.log(v)
-            }
-            return dom
+        if(dom.childNodes[i].nodeName==type){
+          nodes.push(dom.childNodes[i])
         }
-        function initValue(){
-            
-            stairs.totalHeight=Number($('.stairs')[1].value)
-            stairs.num=Number($('.stairs')[2].value)
-            console.log(stairs)
-            bench.h=Number($('.bench')[1].value)
-            bench.fh=Number($('.bench')[2].value)
-            bench.uh=Number($('.bench')[3].value)
-            bench.fw=Number($('.bench')[4].value)
-            bench.uw=Number($('.bench')[5].value)
-            // console.log(bench)
-            ladderBeam.beamWidth=Number($('.ladderBeam')[1].value)
-            ladderBeam.beamHeight=Number($('.ladderBeam')[2].value)
-            ladderBeam.tiaoerWidth=Number($('.ladderBeam')[3].value)
-            ladderBeam.totalHeight=Number($('.ladderBeam')[4].value)
-            ladderBeam.sinkHeight=Number($('.ladderBeam')[5].value)
-            // console.log(ladderBeam)
-        }
-    </script>
+      }
+      return nodes
+    }
+
+
+  </script>
 </body>
+
 </html>
