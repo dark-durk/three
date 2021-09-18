@@ -13,21 +13,35 @@
   <script>
     let scene,camera,renderer
     scene=new THREE.Scene()
-    let material=new  THREE.MeshBasicMaterial({
-      color:0xff0000
-    })
-   // 纹理贴图映射到一个矩形平面上
-    var geometry = new THREE.PlaneGeometry(204, 102); //矩形平面
-    // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
-    var textureLoader = new THREE.TextureLoader();
-    // 执行load方法，加载纹理贴图成功后，返回一个纹理对象Texture
-    textureLoader.load('../img/earth.jpg', function(texture) {
+    // let material=new  THREE.MeshBasicMaterial({
+    //   color:0xff0000
+    // })
+    var geometry = new THREE.BoxGeometry(100,100,100); 
+      let material
+    // // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
+    // var textureLoader = new THREE.TextureLoader();
+    // // 执行load方法，加载纹理贴图成功后，返回一个纹理对象Texture
+    // textureLoader.load('../img/earth.jpg', function(texture) {
+    //    material = new THREE.MeshLambertMaterial({
+    //     // color: 0x0000ff,
+    //     // 设置颜色纹理贴图：Texture对象作为材质map属性的属性值
+    //     map: texture,//设置颜色贴图属性值
+    //   }); 
+    // })
+
+    // 图片加载器
+    var ImageLoader = new THREE.ImageLoader();
+    // load方法回调函数，按照路径加载图片，返回一个html的元素img对象
+    ImageLoader.load('../img/earth.jpg', function(img) {
+      // image对象作为参数，创建一个纹理对象Texture
+      var texture = new THREE.Texture(img);
+      // 下次使用纹理时触发更新
+      texture.needsUpdate = true;
       var material = new THREE.MeshLambertMaterial({
-        // color: 0x0000ff,
-        // 设置颜色纹理贴图：Texture对象作为材质map属性的属性值
-        map: texture,//设置颜色贴图属性值
-      }); 
-    })//材质对象Material
+        map: texture, //设置纹理贴图
+      });
+    })
+    //材质对象Material
       var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
       scene.add(mesh); //网格模型添加到场景中
 
