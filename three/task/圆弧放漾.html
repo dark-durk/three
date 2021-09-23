@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../js//three.min.js"></script>
+  <script src="../js/OrbitControls.js"></script>
+</head>
+
+<body>
+  <script>
+    let scene, camera, renderer
+    scene = new THREE.Scene()
+
+    let p1 = new THREE.Vector2(-10, 20)
+    let p2 = new THREE.Vector2(-10, -5)
+    let line = new THREE.LineCurve(p1, p2)
+    let geometry = new THREE.BufferGeometry()
+    let points = line.getPoints(1)
+    geometry.setFromPoints(points)
+
+    let lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x00ff00
+    })
+
+    let lineMesh = new THREE.Line(geometry, lineMaterial)
+    scene.add(lineMesh)
+
+    let p3 = new THREE.Vector2(-30, 0)
+    let p4 = new THREE.Vector2(10, 0)
+    let line2 = new THREE.LineCurve(p3, p4)
+    let geometry2 = new THREE.BufferGeometry()
+    let points2 = line2.getPoints(1)
+    geometry2.setFromPoints(points2)
+    let lineMesh2 = new THREE.Line(geometry2, lineMaterial)
+    scene.add(lineMesh2)
+
+    let radius = 5
+    console.log(points)
+
+    ambientLight = new THREE.AmbientLight("#ffffff", 0.3);
+    scene.add(ambientLight);
+
+    let axes = new THREE.AxesHelper(800)
+    scene.add(axes)
+
+    initCamera()
+    renderer = new THREE.WebGLRenderer()
+    renderer.setPixelRatio(window.devicePixelRatio);//设置canvas的像素比为当前设备的屏幕像素比，避免高分屏下模糊
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+    render()
+
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+    function render() {
+      renderer.render(scene, camera)
+      requestAnimationFrame(render)
+    }
+    function initCamera() {
+      let s = 200
+      let k = window.innerWidth / window.innerWidth
+      camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000)
+      camera.position.set(100, 300, 300)
+      camera.lookAt(scene.position)
+    }
+
+    function getFunc(p1, p2) {
+
+    }
+
+  </script>
+</body>
+
+</html>

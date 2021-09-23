@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,135 +10,144 @@
   <script src="../js/three.min.js"></script>
   <script src="../js/OrbitControls.js"></script>
 </head>
+
 <body>
   <script type='module'>
     import common from '../js/common.js'
-    let scene,camera,renderer,raycaster
-    scene=new THREE.Scene()
-    raycaster=new THREE.Raycaster()
+    let scene, camera, renderer, raycaster
+    scene = new THREE.Scene()
+    raycaster = new THREE.Raycaster()
 
-    let lineMaterial=new THREE.LineBasicMaterial({
-      color:0x00ff00
+    let lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x00ff00
     })
-    let equation=[]
+    let equation = []
 
     // for(let i=0;i<2;i++){
-      // let x1=(Math.random()*150).toFixed(0)*1
-      // let y1=(Math.random()*150).toFixed(0)*1
-      // let x2=(Math.random()*150).toFixed(0)*1
-      // let y2=(Math.random()*150).toFixed(0)*1
-      
-      let x1=1,y1=59,x2=50,y2=10
-      let x3=1,y3=51,x4=50,y4=100
-      let p1 = new THREE.Vector3(x1, y1, 1); //顶点1坐标
-      let p2 = new THREE.Vector3(x2, y2, 1); //
-      let a=((y1-y2)/(x1-x2))
-      let b=(y1-a*x1)
-      let p3 = new THREE.Vector3(x3, y3, 1); //顶点1坐标
-      let p4 = new THREE.Vector3(x4, y4, 1); //
-      let c=((y4-y3)/(x4-x3))
-      let d=(y3-c*x3)
-      equation.push(a,b)
-      equation.push(c,d)
+    // let x1=(Math.random()*150).toFixed(0)*1
+    // let y1=(Math.random()*150).toFixed(0)*1
+    // let x2=(Math.random()*150).toFixed(0)*1
+    // let y2=(Math.random()*150).toFixed(0)*1
 
-      // 三维直线LineCurve3
-      let lineCurve = new THREE.LineCurve3(p1, p2)
-      let points=lineCurve.getPoints(1)
-      let geometry=new THREE.BufferGeometry()
-      geometry.setFromPoints(points)
-      let lineMesh=new THREE.Line(geometry,lineMaterial)
-      scene.add(lineMesh)
-      let lineCurve2 = new THREE.LineCurve3(p3, p4)
-      let points2=lineCurve2.getPoints(1)
-      let geometry2=new THREE.BufferGeometry()
-      geometry2.setFromPoints(points2)
-      let lineMesh2=new THREE.Line(geometry2,lineMaterial)
-      scene.add(lineMesh2)
+    let x1 = 1, y1 = 59, x2 = 50, y2 = 10
+    let x3 = 1, y3 = 51, x4 = 50, y4 = 100
+    let p1 = new THREE.Vector3(x1, y1, 1); //顶点1坐标
+    let p2 = new THREE.Vector3(x2, y2, 1); //
+    let a = ((y1 - y2) / (x1 - x2))
+    let b = (y1 - a * x1)
+    let p3 = new THREE.Vector3(x3, y3, 1); //顶点1坐标
+    let p4 = new THREE.Vector3(x4, y4, 1); //
+    let c = ((y4 - y3) / (x4 - x3))
+    let d = (y3 - c * x3)
+    equation.push(a, b)
+    equation.push(c, d)
+
+    // 三维直线LineCurve3
+    let lineCurve = new THREE.LineCurve3(p1, p2)
+    let points = lineCurve.getPoints(1)
+    let geometry = new THREE.BufferGeometry()
+    geometry.setFromPoints(points)
+    let lineMesh = new THREE.Line(geometry, lineMaterial)
+    scene.add(lineMesh)
+    let lineCurve2 = new THREE.LineCurve3(p3, p4)
+    let points2 = lineCurve2.getPoints(1)
+    let geometry2 = new THREE.BufferGeometry()
+    geometry2.setFromPoints(points2)
+    let lineMesh2 = new THREE.Line(geometry2, lineMaterial)
+    scene.add(lineMesh2)
     // }
     // console.log(equation)
-    
-    document.addEventListener('click',function(e){
-      let mouse=common.getStdVector(e)
-      let worldVector=common.getWorldVector(mouse,camera)
-     
-     getClickLine(equation,worldVector)
-     let center=getCenter(equation,5)
-     console.log(center)
-     let arc=new THREE.ArcCurve(center.x,center.y,5,0,Math.PI*2)
-     let arcPoints=arc.getPoints(100)
-     let g=new THREE.BufferGeometry()
-     g.setFromPoints(arcPoints)
-     let m=new THREE.Line(g,lineMaterial)
-     scene.add(m)
+
+    document.addEventListener('click', function (e) {
+      let mouse = common.getStdVector(e)
+      let worldVector = common.getWorldVector(mouse, camera)
+
+      getClickLine(equation, worldVector)
+      let center = getCenter(equation, 5)
+      let arc = new THREE.ArcCurve(center.x, center.y, 5, Math.PI * 3 / 4, Math.PI * 5 / 4)
+      let curvePath = new THREE.CurvePath()
+      curvePath.curves.push()
+      let arcPoints = arc.getPoints(100)
+      let g = new THREE.BufferGeometry()
+      g.setFromPoints(arcPoints)
+      let m = new THREE.Line(g, lineMaterial)
+      scene.add(m)
       // raycaster.setFromCamera(mouse,camera)
       // let intersects=raycaster.intersectObjects(scene.children,true)
       // console.log(intersects)
     })
 
 
-    let ambient=new THREE.AmbientLight(10,0)
+    let ambient = new THREE.AmbientLight(10, 0)
     scene.add(ambient)
 
     // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
-    let gridHelper=new THREE.GridHelper(300,30)
-    gridHelper.rotateX(Math.PI/2)
-    scene.add(gridHelper) 
+    let gridHelper = new THREE.GridHelper(300, 30)
+    gridHelper.rotateX(Math.PI / 2)
+    scene.add(gridHelper)
     var axesHelper = new THREE.AxesHelper(800);
 
     scene.add(axesHelper)
 
-    let k=window.innerWidth/window.innerHeight
-    let s=200
-    camera=new THREE.OrthographicCamera(-s*k,s*k,s,-s,1,1000)
-    camera.position.set(0,0,500)
+    let k = window.innerWidth / window.innerHeight
+    let s = 200
+    camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000)
+    camera.position.set(0, 0, 500)
     camera.lookAt(scene.position)
 
-    renderer=new THREE.WebGLRenderer()
+    renderer = new THREE.WebGLRenderer()
     renderer.sortObjects = true
-    renderer.setSize(window.innerWidth,window.innerHeight)
+    renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)
     render()
-    let controls=new THREE.OrbitControls(camera,renderer.domElement)
-    function render(){
-      renderer.render(scene,camera)
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+    function render() {
+      renderer.render(scene, camera)
       requestAnimationFrame(render)
     }
 
-    function getClickLine(arr,worldVector) {
-      let minDistance=1000,index
-      for(let i=0;i<arr.length;i+=2){
-        let s=Math.abs(arr[i]*worldVector.x-worldVector.y+arr[i+1])
-        let s2=Math.sqrt(arr[i]*arr[i]+1)
+    function getClickLine(arr, worldVector) {
+      let minDistance = 1000, index
+      for (let i = 0; i < arr.length; i += 2) {
+        let s = Math.abs(arr[i] * worldVector.x - worldVector.y + arr[i + 1])
+        let s2 = Math.sqrt(arr[i] * arr[i] + 1)
         // console.log(arr)
         // console.log(s+'---'+s2)
-        let distance=s/s2
-        if(distance<minDistance){
-          minDistance=distance
-          index=i
+        let distance = s / s2
+        if (distance < minDistance) {
+          minDistance = distance
+          index = i
         }
         // console.log(distance)
       }
     }
-    function getCenter(arr,radius){
+    function getCenter(arr, radius) {
       console.log(arr)
-      let center=new THREE.Vector2()
-      let point=new THREE.Vector2()
-      point.x=(arr[3]-arr[1])/(arr[0]-arr[2])
-      point.y=arr[0]*point.x+arr[1]
+      let center = new THREE.Vector2()
+      let point = new THREE.Vector2()
+      point.x = (arr[3] - arr[1]) / (arr[0] - arr[2])
+      point.y = arr[0] * point.x + arr[1]
       console.log(point)
 
-      let bisectorK=Math.abs((arr[2]-arr[0])/(1+arr[0]*arr[2]))
-      let bisectorAngle=Math.atan(bisectorK)/2
-      let distance=radius/(Math.cos(bisectorAngle))
+      let bisectorK = Math.abs((arr[2] - arr[0]) / (1 + arr[0] * arr[2]))
+      let bisectorAngle = Math.atan(bisectorK) / 2
+      let distance = radius / (Math.cos(bisectorAngle))
 
-      let k=arr[0]>arr[2]?arr[2]:arr[0]
-      let angle=bisectorAngle+Math.atan(k)
-      console.log(bisectorAngle+'---'+Math.atan(k))
-      center.x=point.x+(distance/Math.sin(angle))
-      center.y=point.y+(distance/Math.cos(angle))
+      // let k=arr[0]>arr[2]?arr[2]:arr[0]
+      let angle = (Math.atan(arr[0]) + Math.atan(arr[2])) / 2
+      // console.log(angle)
+      if (angle == 0) {
+        center.x = point.x + radius / Math.sqrt(1 / 2)
+        center.y = point.y
+        console.log(Math.sqrt(1 / 2))
+      } else {
+        center.x = point.x + (distance / Math.sin(angle))
+        center.y = point.y + (distance / Math.cos(angle))
+      }
       console.log(center)
       return center
     }
   </script>
 </body>
+
 </html>
