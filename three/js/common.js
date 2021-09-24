@@ -7,8 +7,7 @@ export default{
         directionalLight.target = scene
         scene.add(directionalLight)
     },
-     initCamera(screen) {
-        let s=10000
+     initCamera(screen,s=10000) {
         let k=window.innerWidth/window.innerHeight
         let camera=new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 10000)
         camera.position.set(100,300,8000)
@@ -16,7 +15,6 @@ export default{
         return camera
     },
      initRenderer(renderer) {
-        // renderer=new THREE.WebGLRenderer()
         renderer.setSize(window.innerWidth,window.innerHeight)
         renderer.setPixelRatio(window.devicePixelRatio);//设置canvas的像素比为当前设备的屏幕像素比，避免高分屏下模糊
         document.body.appendChild(renderer.domElement)

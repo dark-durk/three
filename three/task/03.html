@@ -64,14 +64,20 @@
 
       getClickLine(equation, worldVector)
       let center = getCenter(equation, 5)
-      let arc = new THREE.ArcCurve(center.x, center.y, 5, Math.PI * 3 / 4, Math.PI * 5 / 4)
-      let curvePath = new THREE.CurvePath()
-      curvePath.curves.push()
-      let arcPoints = arc.getPoints(100)
+      let pointCuts=getPointCut(equation,center)
+      // let arc = new THREE.ArcCurve(center.x, center.y, 5, Math.PI * 3 / 4, Math.PI * 5 / 4)
+      let arc = new THREE.CatmullRomCurve3(pointCuts);
+
+      // let curvePath = new THREE.CurvePath()
+      // curvePath.curves.push()
+      let arcPoints = arc.getPoints(10)
       let g = new THREE.BufferGeometry()
       g.setFromPoints(arcPoints)
       let m = new THREE.Line(g, lineMaterial)
       scene.add(m)
+
+
+
       // raycaster.setFromCamera(mouse,camera)
       // let intersects=raycaster.intersectObjects(scene.children,true)
       // console.log(intersects)
@@ -127,7 +133,7 @@
       let point = new THREE.Vector2()
       point.x = (arr[3] - arr[1]) / (arr[0] - arr[2])
       point.y = arr[0] * point.x + arr[1]
-      console.log(point)
+      // console.log(point)
 
       let bisectorK = Math.abs((arr[2] - arr[0]) / (1 + arr[0] * arr[2]))
       let bisectorAngle = Math.atan(bisectorK) / 2
@@ -139,13 +145,32 @@
       if (angle == 0) {
         center.x = point.x + radius / Math.sqrt(1 / 2)
         center.y = point.y
-        console.log(Math.sqrt(1 / 2))
+        // console.log(Math.sqrt(1 / 2))
       } else {
         center.x = point.x + (distance / Math.sin(angle))
         center.y = point.y + (distance / Math.cos(angle))
       }
       console.log(center)
       return center
+    }
+    function getPointCut(arr,center){
+      let pointCuts=[]
+      let pointCut1=new THREE.Vector3()
+      let pointCut2=new THREE.Vector3()
+
+      let k1=-1/arr[0]
+      let b1=center.y-k1*center.x
+      pointCut1.x=(arr[1]-b1)/(k1-arr[0])
+      pointCut1.y=k1*pointCut1.x+b1
+
+      let k2=-1/arr[2]
+      let b2=center.y-k2*center.x
+      pointCut2.x=(arr[3]-b2)/(k2-arr[2])
+      pointCut2.y=k2*pointCut2.x+b2
+
+      pointCuts.push(pointCut1,pointCut2)
+      // console.log(pointCuts)
+      return pointCuts
     }
   </script>
 </body>

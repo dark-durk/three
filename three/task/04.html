@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <style>
+    .content{
+      position: absolute;
+      top: 10px;
+      left: 20px;
+    }
+  </style>
+  <script src="../js/three.min.js"></script>
+  <script src="../js/OrbitControls.js"></script>
+</head>
+
+<body>
+  <div class="content">
+    <button id="circle">圆</button>
+    <button id="arc1">圆心端点弧</button>
+    <button id="arc2">起点端点弧</button>
+  </div>
+  <script type='module'>
+    import common from '../js/common.js'
+    import {lineMaterial,meshMaterial} from '../js/material.js'
+    let scene, camera, renderer, raycaster
+    let clickPoint1,clickPoint2,clickPoint3,clickNum=0,num=2
+    scene = new THREE.Scene()
+    renderer=new THREE.WebGLRenderer()
+    raycaster = new THREE.Raycaster()
+
+    const planeMaterialAttr={
+      transparent:true,
+      opacity:0
+    }
+    let pointMaterial=meshMaterial()
+    let circleMaterial=lineMaterial()
+
+    
+    let planeGeometry=new THREE.PlaneGeometry(window.innerWidth,window.innerHeight)
+    let planeMaterial=meshMaterial(planeMaterialAttr)
+    let planeMesh=new THREE.Mesh(planeGeometry,planeMaterial)
+    scene.add(planeMesh)
+   
+    
+    camera=common.initCamera(scene,200)
+    // common.initLight(scene)
+    common.initRenderer(renderer)
+    
+
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+    // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+    let gridHelper = new THREE.GridHelper(300, 30)
+    gridHelper.rotateX(Math.PI / 2)
+    scene.add(gridHelper)
+    var axesHelper = new THREE.AxesHelper(800);
+    scene.add(axesHelper)
+    render()
+    
+    document.querySelector('#circle').addEventListener('click',function(e){
+      e.stopPropagation()
+      if(num==2) return
+      num=2
+      clickNum=0
+    })
+    document.querySelector('#arc1').addEventListener('click',function(e){
+      e.stopPropagation()
+      if(num==3) return
+      num=3
+      clickNum=0
+    })
+    document.querySelector('#arc2').addEventListener('click',function(e){
+      e.stopPropagation()
+
+    })
+
+    let centerPoint,circleMeshTemp,startAngle,startPoint
+    document.addEventListener('click', function (e) {
+      let mouse = common.getStdVector(e)
+      clickNum++
+      raycaster.setFromCamera(mouse,camera)
+      let intersects=raycaster.intersectObjects(scene.children,true)
+      // console.log(clickNum)
+      if(intersects.length>0){
+        if(clickNum%num==1){
+          clickPoint1=intersects[0].point
+          centerPoint=createPoint(clickPoint1,pointMaterial)
+          scene.add(centerPoint)
+        }else if(num==2&&clickNum%num==0){
+          let clickPoint2=intersects[0].point
+          let radius=pointsDistance(clickPoint1,clickPoint2)
+          let circleMesh=circleMeshTemp.clone()
+          scene.add(circleMesh)
+          scene.remove(centerPoint)
+          centerPoint.geometry.dispose()
+          clickPoint1=null
+          clickPoint2=null
+        }else if(num==3&&clickNum%num==2){
+          clickPoint2=intersects[0].point
+          startAngle=pointsArc(clickPoint1,clickPoint2)
+          startPoint=createPoint(clickPoint2,pointMaterial)
+          scene.add(startPoint)
+        }else if(num==3&&clickNum%num==0){
+          clickPoint3=intersects[0].point
+          let endAngle=pointsArc(clickPoint1,clickPoint3)
+          let radius=pointsDistance(clickPoint1,clickPoint2)
+          let arcMesh=createArc(clickPoint1,radius,startAngle,endAngle)
+          scene.add(arcMesh)
+          scene.remove(centerPoint)
+          centerPoint.geometry.dispose()
+          scene.remove(startPoint)
+          startPoint.geometry.dispose()
+          clickPoint1=null
+          clickPoint2=null
+          clickPoint3=null
+        }
+      }
+    })
+    document.addEventListener('mousemove',function(e){
+      if(clickPoint1){
+        if(circleMeshTemp){
+          scene.remove(circleMeshTemp)
+          circleMeshTemp.geometry.dispose()
+        }
+        if(num==2){
+          let mouse = common.getStdVector(e)
+          raycaster.setFromCamera(mouse,camera)
+          let intersects=raycaster.intersectObjects(scene.children,true)
+          let positionCurrent=intersects[0].point
+  
+          let radius=pointsDistance(clickPoint1,positionCurrent)
+          circleMeshTemp=createArc(clickPoint1,radius)
+          scene.add(circleMeshTemp)
+        }else{
+          console.log('d')
+        }
+      }
+
+    })
+
+    // document.addEventListener('mouseup',function(e){
+    //   if(clickNum%2==0){
+    //     clickPoint1=null
+    //     clickPoint2=null
+    //     clickNum=0
+    //     console.log('d')
+    //   }
+    // })
+
+
+    function render(){
+      renderer.render(scene, camera)
+      requestAnimationFrame(render)
+    }
+    function createPoint(vector){
+      let geometry=new THREE.CircleGeometry(1,50)
+      let centerPoint=new THREE.Mesh(geometry,pointMaterial)
+      centerPoint.position.set(vector.x,vector.y,vector.z)
+      // console.log(centerPoint)
+      return centerPoint
+    }
+    function createArc(center,radius,startPosition=0,endPosition=Math.PI*2){
+      let arcCurve=new THREE.ArcCurve(center.x,center.y,radius,startPosition,endPosition)
+      let points=arcCurve.getPoints(50)
+      let geometry=new THREE.BufferGeometry()
+      geometry.setFromPoints(points)
+      let mesh=new THREE.Line(geometry,circleMaterial)
+      return mesh
+    }
+    function pointsDistance(point1,point2){
+      let x=Math.pow(point1.x-point2.x,2)
+      let y=Math.pow(point1.y-point2.y,2)
+      let dis=Math.sqrt(x+y)
+      return dis
+    }
+    function pointsArc(point1,point2){
+      let k=(point1.y-point2.y)/(point1.x-point2.x)
+      return Math.atan2(point2.y-point1.y,point2.x-point1.x)
+    }
+  </script>
+</body>
+
+</html>
