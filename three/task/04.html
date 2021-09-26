@@ -8,7 +8,7 @@
   <title>Document</title>
   <link rel="stylesheet" href="../css/common.css">
   <style>
-    .content{
+    .content {
       position: absolute;
       top: 10px;
       left: 20px;
@@ -26,31 +26,31 @@
   </div>
   <script type='module'>
     import common from '../js/common.js'
-    import {lineMaterial,meshMaterial} from '../js/material.js'
+    import { lineMaterial, meshMaterial } from '../js/material.js'
     let scene, camera, renderer, raycaster
-    let clickPoint1,clickPoint2,clickPoint3,clickNum=0,num=2
+    let clickPoint1, clickPoint2, clickPoint3, clickNum = 0, type = 1
     scene = new THREE.Scene()
-    renderer=new THREE.WebGLRenderer()
+    renderer = new THREE.WebGLRenderer()
     raycaster = new THREE.Raycaster()
 
-    const planeMaterialAttr={
-      transparent:true,
-      opacity:0
+    const planeMaterialAttr = {
+      transparent: true,
+      opacity: 0
     }
-    let pointMaterial=meshMaterial()
-    let circleMaterial=lineMaterial()
+    let pointMaterial = meshMaterial()
+    let circleMaterial = lineMaterial()
 
-    
-    let planeGeometry=new THREE.PlaneGeometry(window.innerWidth,window.innerHeight)
-    let planeMaterial=meshMaterial(planeMaterialAttr)
-    let planeMesh=new THREE.Mesh(planeGeometry,planeMaterial)
+
+    let planeGeometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight)
+    let planeMaterial = meshMaterial(planeMaterialAttr)
+    let planeMesh = new THREE.Mesh(planeGeometry, planeMaterial)
     scene.add(planeMesh)
-   
-    
-    camera=common.initCamera(scene,200)
+
+
+    camera = common.initCamera(scene, 200)
     // common.initLight(scene)
     common.initRenderer(renderer)
-    
+
 
     let controls = new THREE.OrbitControls(camera, renderer.domElement)
 
@@ -61,83 +61,100 @@
     var axesHelper = new THREE.AxesHelper(800);
     scene.add(axesHelper)
     render()
-    
-    document.querySelector('#circle').addEventListener('click',function(e){
-      e.stopPropagation()
-      if(num==2) return
-      num=2
-      clickNum=0
-    })
-    document.querySelector('#arc1').addEventListener('click',function(e){
-      e.stopPropagation()
-      if(num==3) return
-      num=3
-      clickNum=0
-    })
-    document.querySelector('#arc2').addEventListener('click',function(e){
-      e.stopPropagation()
 
+    document.querySelector('#circle').addEventListener('click', function (e) {
+      e.stopPropagation()
+      if (type == 1) return
+      type = 1
+      clickNum = 0
+    })
+    document.querySelector('#arc1').addEventListener('click', function (e) {
+      e.stopPropagation()
+      if (type == 2) return
+      type = 2
+      clickNum = 0
+    })
+    document.querySelector('#arc2').addEventListener('click', function (e) {
+      e.stopPropagation()
+      if (type == 3) return
+      type = 3
+      clickNum = 0
     })
 
-    let centerPoint,circleMeshTemp,startAngle,startPoint
+    let centerPoint, circleMeshTemp, startAngle, startPoint
     document.addEventListener('click', function (e) {
       let mouse = common.getStdVector(e)
       clickNum++
-      raycaster.setFromCamera(mouse,camera)
-      let intersects=raycaster.intersectObjects(scene.children,true)
+      raycaster.setFromCamera(mouse, camera)
+      let intersects = raycaster.intersectObjects(scene.children, true)
       // console.log(clickNum)
-      if(intersects.length>0){
-        if(clickNum%num==1){
-          clickPoint1=intersects[0].point
-          centerPoint=createPoint(clickPoint1,pointMaterial)
+      if (intersects.length > 0) {
+        if ((type == 1 && clickNum % 2 == 1) || (type == 2 && clickNum % 3 == 1) || (type == 3 && clickNum % 3 == 1)) {
+          clickPoint1 = intersects[0].point
+          centerPoint = createPoint(clickPoint1, pointMaterial)
           scene.add(centerPoint)
-        }else if(num==2&&clickNum%num==0){
-          let clickPoint2=intersects[0].point
-          let radius=pointsDistance(clickPoint1,clickPoint2)
-          let circleMesh=circleMeshTemp.clone()
-          scene.add(circleMesh)
-          scene.remove(centerPoint)
-          centerPoint.geometry.dispose()
-          clickPoint1=null
-          clickPoint2=null
-        }else if(num==3&&clickNum%num==2){
-          clickPoint2=intersects[0].point
-          startAngle=pointsArc(clickPoint1,clickPoint2)
-          startPoint=createPoint(clickPoint2,pointMaterial)
-          scene.add(startPoint)
-        }else if(num==3&&clickNum%num==0){
-          clickPoint3=intersects[0].point
-          let endAngle=pointsArc(clickPoint1,clickPoint3)
-          let radius=pointsDistance(clickPoint1,clickPoint2)
-          let arcMesh=createArc(clickPoint1,radius,startAngle,endAngle)
-          scene.add(arcMesh)
-          scene.remove(centerPoint)
-          centerPoint.geometry.dispose()
-          scene.remove(startPoint)
-          startPoint.geometry.dispose()
-          clickPoint1=null
-          clickPoint2=null
-          clickPoint3=null
         }
+        if (type == 1) {
+          if (clickNum % 2 == 0) {
+            let clickPoint2 = intersects[0].point
+            let radius = pointsDistance(clickPoint1, clickPoint2)
+            let circleMesh = circleMeshTemp.clone()
+            scene.add(circleMesh)
+            scene.remove(centerPoint)
+            centerPoint.geometry.dispose()
+            clickPoint1 = null
+            clickPoint2 = null
+          }
+        } else if (type == 2) {
+          if (clickNum % 3 == 2) {
+            clickPoint2 = intersects[0].point
+            console.log(clickPoint1, clickPoint2)
+            startAngle = pointsArc(clickPoint1, clickPoint2)
+            startPoint = createPoint(clickPoint2, pointMaterial)
+            scene.add(startPoint)
+          } else if (clickNum % 3 == 0) {
+            clickPoint3 = intersects[0].point
+            let endAngle = pointsArc(clickPoint1, clickPoint3)
+            let radius = pointsDistance(clickPoint1, clickPoint2)
+            let arcMesh = createArc(clickPoint1, radius, startAngle, endAngle)
+            scene.add(arcMesh)
+            scene.remove(centerPoint)
+            centerPoint.geometry.dispose()
+            scene.remove(startPoint)
+            startPoint.geometry.dispose()
+            clickPoint1 = null
+            clickPoint2 = null
+            clickPoint3 = null
+          }
+        } else {
+          if (clickNum % 3 == 2) {
+            clickPoint2 = intersects[0].point
+          } else if (clickNum % 3 == 0) {
+            clickPoint3 = intersects[0].point
+            getSubPoint(clickPoint1, clickPoint2, clickPoint3)
+
+          }
+        }
+
       }
     })
-    document.addEventListener('mousemove',function(e){
-      if(clickPoint1){
-        if(circleMeshTemp){
+    document.addEventListener('mousemove', function (e) {
+      if (clickPoint1) {
+        if (circleMeshTemp) {
           scene.remove(circleMeshTemp)
           circleMeshTemp.geometry.dispose()
         }
-        if(num==2){
+        if (type == 1) {
           let mouse = common.getStdVector(e)
-          raycaster.setFromCamera(mouse,camera)
-          let intersects=raycaster.intersectObjects(scene.children,true)
-          let positionCurrent=intersects[0].point
-  
-          let radius=pointsDistance(clickPoint1,positionCurrent)
-          circleMeshTemp=createArc(clickPoint1,radius)
+          raycaster.setFromCamera(mouse, camera)
+          let intersects = raycaster.intersectObjects(scene.children, true)
+          let positionCurrent = intersects[0].point
+
+          let radius = pointsDistance(clickPoint1, positionCurrent)
+          circleMeshTemp = createArc(clickPoint1, radius)
           scene.add(circleMeshTemp)
-        }else{
-          console.log('d')
+        } else {
+          // console.log('d')
         }
       }
 
@@ -153,34 +170,53 @@
     // })
 
 
-    function render(){
+    function render() {
       renderer.render(scene, camera)
       requestAnimationFrame(render)
     }
-    function createPoint(vector){
-      let geometry=new THREE.CircleGeometry(1,50)
-      let centerPoint=new THREE.Mesh(geometry,pointMaterial)
-      centerPoint.position.set(vector.x,vector.y,vector.z)
+    function createPoint(vector) {
+      let geometry = new THREE.CircleGeometry(1, 50)
+      let centerPoint = new THREE.Mesh(geometry, pointMaterial)
+      centerPoint.position.set(vector.x, vector.y, vector.z)
       // console.log(centerPoint)
       return centerPoint
     }
-    function createArc(center,radius,startPosition=0,endPosition=Math.PI*2){
-      let arcCurve=new THREE.ArcCurve(center.x,center.y,radius,startPosition,endPosition)
-      let points=arcCurve.getPoints(50)
-      let geometry=new THREE.BufferGeometry()
+    function createArc(center, radius, startPosition = 0, endPosition = Math.PI * 2) {
+      let arcCurve = new THREE.ArcCurve(center.x, center.y, radius, startPosition, endPosition)
+      let points = arcCurve.getPoints(50)
+      let geometry = new THREE.BufferGeometry()
       geometry.setFromPoints(points)
-      let mesh=new THREE.Line(geometry,circleMaterial)
+      let mesh = new THREE.Line(geometry, circleMaterial)
       return mesh
     }
-    function pointsDistance(point1,point2){
-      let x=Math.pow(point1.x-point2.x,2)
-      let y=Math.pow(point1.y-point2.y,2)
-      let dis=Math.sqrt(x+y)
+    function pointsDistance(point1, point2) {
+      let x = Math.pow(point1.x - point2.x, 2)
+      let y = Math.pow(point1.y - point2.y, 2)
+      let dis = Math.sqrt(x + y)
       return dis
     }
-    function pointsArc(point1,point2){
-      let k=(point1.y-point2.y)/(point1.x-point2.x)
-      return Math.atan2(point2.y-point1.y,point2.x-point1.x)
+    function pointsArc(point1, point2) {
+      let k = (point1.y - point2.y) / (point1.x - point2.x)
+      return Math.atan2(point2.y - point1.y, point2.x - point1.x)
+    }
+    function getSubPoint(point1, point2, point3) {
+      let line = new THREE.Line3(point1, point2)
+      let normalVector = new THREE.Vector3()
+      let lineCenter = new THREE.Vector3()
+      let point = new THREE.Vector3() //中垂线上一点
+
+      line.getCenter(lineCenter)
+      line.delta(normalVector)
+
+      console.log(normalVector)
+      if (normalVector.x == 0) { //直线平行于x轴
+        point.set(10, normalVector.y, normalVector.z)
+      } else if (normalVector.y == 0) {
+        point.set(normalVector.x, 10, normalVector.z)
+      } else {
+        point.set(10, lineCenter.y - (normalVector.x * (10 - lineCenter.x)) / normalVector.y, normalVector.z)
+      }
+
     }
     
   </script>
