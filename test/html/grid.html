@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .contain{
+      width: 600px;
+      padding: 12px;
+      box-sizing: border-box;
+      border:1px solid black;
+      display: grid;
+      grid-template: calc(200px - 0px) 100px /300px 100px;
+      /* grid-gap: 20px; */
+      justify-content: center;
+      /* justify-items: center;
+      align-items: center; */
+      /* justify-items: center; */
+    }
+    .item{
+      /* width: 300px; */
+      border:1px solid red;
+    }
+    .one{
+      grid-row: 1;
+      grid-column: 1/-1;
+      /* align-self: center;
+      justify-self:center ; */
+    }
+    .two{
+      margin-top: 20px;
+    }
+    .three{
+
+    }
+  </style>
+</head>
+<body>
+  <div class="contain">
+    <div class="item one">onessd</div>
+    <div class="item two">two</div>
+    <div class="item three">three <input type="button" value="button"></div>
+  </div>
+</body>
+</html>
